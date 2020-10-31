@@ -22,6 +22,7 @@ pygame.display.set_icon(icon)
 
 # Player image
 player_image = pygame.image.load("astronaut.png")
+#Background Image
 background = pygame.image.load("galaxy.jpg")
 
 # Coordinates for player image (x, y). Base off screen width and height
@@ -90,8 +91,10 @@ while running:
         if event.type == pygame.KEYUP:  # Detects when key is released
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 print("Key has been released")
+                
     # RGB control for bacground. Takes tuple as argument
     screen.fill((0, 0, 0))
+    #Set background image 
     screen.blit(background,(0,0))
     # player function must come after the screen fill to avoid covering up image
     player(playerX, playerY)
