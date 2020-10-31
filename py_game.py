@@ -1,6 +1,6 @@
 import pygame
-#import RPi.GPIO as GPIO
-#hello
+import RPi.GPIO as GPIO
+
 # this is necessary to start up all the pygame modules:
 pygame.init()
 
