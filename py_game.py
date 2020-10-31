@@ -22,6 +22,7 @@ pygame.display.set_icon(icon)
 
 # Player image
 player_image = pygame.image.load("astronaut.png")
+background = pygame.image.load("galaxy.jpg")
 
 # Coordinates for player image (x, y). Base off screen width and height
 global playerX, playerY
@@ -42,7 +43,7 @@ right_button = 15
 
 
 class GPIO_Handler:
-    def GPIO_Setup():
+    def GPIO_Setup(self):
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(left_button, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -56,7 +57,7 @@ class GPIO_Handler:
     def right_callback(channel):
         global playerX
         print("Right button pressed")
-        playerX += 50
+        playerX += 500
 
 
 GPIO_Handler.GPIO_Setup()
@@ -91,7 +92,7 @@ while running:
                 print("Key has been released")
     # RGB control for bacground. Takes tuple as argument
     screen.fill((0, 0, 0))
-
+    screen.blit(background,(0,0))
     # player function must come after the screen fill to avoid covering up image
     player(playerX, playerY)
     pygame.display.update()
