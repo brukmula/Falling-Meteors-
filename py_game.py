@@ -12,6 +12,8 @@ global xmax, ymax
 global screen
 xmax = 800
 ymax = 600
+left_boundary = 50
+right_boundary = 700
 screen = pygame.display.set_mode((xmax, ymax))
 # set_mode() takes a tuple as an argument that tells it the width and height
 # of the window (A.K.A. the resolution)
@@ -140,22 +142,22 @@ while running:
 
         # if keystroke is pressed check whether its right or left. Will change later when we get to it. (Find some way of configuring buttons)
         if event.type == pygame.KEYDOWN:  # KEYDOWN detects keystoke event
-            if event.key == pygame.K_LEFT and playerX > 50:
-                playerX -= 50
-            if event.key == pygame.K_RIGHT and playerX < 700:
-                playerX += 50
-    #     if event.type == pygame.KEYUP:  # Detects when key is released
-    #         if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+            if event.key == pygame.K_LEFT and playerX > left_boundary:
+                playerX_change = -50
+            if event.key == pygame.K_RIGHT and playerX < right_boundary:
+                playerX_change = 50
+        # if event.type == pygame.KEYUP:  # Detects when key is released
+        #     if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
 
-    #             playerX_change = 0
+        #         playerX_change = 0
 
-    # player function must come after the screen fill to avoid covering up image
-
-    playerX = playerX_change
+    #player function must come after the screen fill to avoid covering up image
+    playerX += playerX_change
     player(playerX, playerY)
-    pygame.display.update()
+    playerX_change = 0
+    
 
-    # increase the number after the modulo operator to decrease the asteroid spawn speed
+    #increase the number after the modulo operator to decrease the asteroid spawn speed
     if not count % 5:
         theAsteroids.append(Asteroid())
         theAsteroids[numAsteroid].fall()
