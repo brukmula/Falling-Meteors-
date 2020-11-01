@@ -9,6 +9,7 @@ pygame.init()
 
 # setting up the display window:
 global xmax, ymax
+global screen
 xmax = 800
 ymax = 600
 screen = pygame.display.set_mode((xmax, ymax))
@@ -31,9 +32,9 @@ player_image = pygame.image.load("Images/astronaut.png")
 # Background Image
 background = pygame.image.load("Images/galaxy.jpg")
 # Asteroid Images
-asteroid1 = pygame.image.load("Images/asteroid.png")
-asteroid2 = pygame.image.load("Images/asteroid2.png")
-asteroid3 = pygame.image.load("Images/asteroid3.png")
+asteroid1 = pygame.image.load("Images/asteroid4.png")
+asteroid2 = pygame.image.load("Images/asteroid5.png")
+asteroid3 = pygame.image.load("Images/asteroid6.png")
 asteroids = [asteroid1, asteroid2, asteroid3]
 
 # Coordinates for player image (x, y). Base off screen width and height
@@ -57,23 +58,27 @@ class Asteroid:
     global asteroids
 
     def __init__(self):
-        print("new asteroid created")
-        self.fall_speed = 100
-        self.ypos = ymax
-        self.xval = random.randint(0, xmax)
-        self.yval = ymax
+        self.fall_speed = 1
+        self.falling = True
+        self.ypos = 0
+        self.xpos = random.randint(0, xmax)
         self.num_asteroid = random.randint(0, 2)
-        screen.blit(asteroids[self.num_asteroid], (self.xval, self.yval))
+        screen.blit(asteroids[self.num_asteroid], (self.xpos, self.ypos))
 
     def start_falling(self):
         global screen
+        global ymax
         global asteroids
-        print("start_falling begun")
-        for i in range(ymax // self.fall_speed):
-            print(self.ypos)
-            self.ypos = self.ypos - self.fall_speed
-            screen.blit(asteroids[self.num_asteroid], (self.xval, self.yval))
-            time.sleep(1)
+        self.start = time.time()
+        self.count = 1
+        while self.falling:
+            # increase the number after the modulo operator to decrease fall speed
+            if not self.count % 6:
+                self.ypos += self.fall_speed
+            screen.blit(asteroids[self.num_asteroid], (self.xpos, self.ypos))
+            if self.ypos >= ymax:
+                self.falling = False
+            self.count += 1
 
     def fall(self):
         self.fall_thread = threading.Thread(target=self.start_falling)
@@ -148,18 +153,25 @@ while running:
     player(playerX, playerY)
     pygame.display.update()
 
-    curTime = time.time()
-    print(curTime - startTime)
-    if not curTime - startTime % 5:
+    # increase the number after the modulo operator to decrease the asteroid spawn speed
+    if not count % 5:
         theAsteroids.append(Asteroid())
         theAsteroids[numAsteroid].fall()
         numAsteroid += 1
+
+    if len(theAsteroids) > 15:
+        theAsteroids = []
+        numAsteroid = 0
+
+    if count > 1000:
+        count = 0
 
     # displaying program is taxing so work on background stuff first
 
     # Updating the display. You can either use update or use flip method. Update only changes whatever you put in the parameter. If no argument is given update changes everything. pygame flip always changes everything (Not really necessary)
     pygame.display.update()
     count += 1
+    time.sleep(0.1)
 
 
 pygame.quit()
