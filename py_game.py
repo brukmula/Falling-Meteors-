@@ -26,10 +26,9 @@ player_image = pygame.image.load("astronaut.png")
 background = pygame.image.load("galaxy.jpg")
 
 # Coordinates for player image (x, y). Base off screen width and height
-global playerX, playerY
+
 playerX = 370
 playerY = 480
-
 playerX_change = 0 
 
 
@@ -89,15 +88,17 @@ while running:
         # if keystroke is pressed check whether its right or left. Will change later when we get to it. (Find some way of configuring buttons)
         if event.type == pygame.KEYDOWN:  # KEYDOWN detects keystoke event
             if event.key == pygame.K_LEFT and playerX > 50:
-                playerX -= 50
-            if event.key == pygame.K_RIGHT and playerX < 700 :
-                playerX += 50
+                playerX_change = -50
+            if event.key == pygame.K_RIGHT and playerX < 700:
+                playerX_change = 50
     #     if event.type == pygame.KEYUP:  # Detects when key is released
     #         if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 
     #             playerX_change = 0
                 
     # player function must come after the screen fill to avoid covering up image
+
+    playerX = playerX_change
     player(playerX, playerY)
     pygame.display.update()
 
