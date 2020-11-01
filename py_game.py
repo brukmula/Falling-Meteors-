@@ -19,7 +19,7 @@ screen = pygame.display.set_mode((xmax, ymax))
 # of the window (A.K.A. the resolution)
 
 # Sets the title of the window
-pygame.display.set_caption('Our Game Title')
+pygame.display.set_caption('Falling Meteors')
 
 # attrubuting icon:
 # Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a>
