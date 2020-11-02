@@ -33,6 +33,7 @@ pygame.display.set_icon(icon)
 player_image = pygame.image.load("Images/astronaunt2.png")
 # Background Image
 background = pygame.image.load("Images/galaxy.jpg")
+
 # Asteroid Images
 asteroid1 = pygame.image.load("Images/asteroid4.png")
 asteroid2 = pygame.image.load("Images/asteroid5.png")

@@ -135,7 +135,7 @@ for i in range(len(asteroids)):
 # asteroid3 = Asteroid(asteroid3_image)
 # asteroid4 = Asteroid(asteroid4_image)
 
-asteroid_fall_speed = 0.5
+asteroid_fall_speed = 0.2
 player = Player()
 
 while running:
