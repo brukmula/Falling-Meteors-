@@ -30,14 +30,16 @@ icon = pygame.image.load("Images/meteorite.png")
 pygame.display.set_icon(icon)
 
 # Player image
-player_image = pygame.image.load("Images/astronaut.png")
+player_image = pygame.image.load("Images/astronaunt2.png")
 # Background Image
 background = pygame.image.load("Images/galaxy.jpg")
 # Asteroid Images
 asteroid1 = pygame.image.load("Images/asteroid4.png")
 asteroid2 = pygame.image.load("Images/asteroid5.png")
-asteroid3 = pygame.image.load("Images/asteroid6.png")
-asteroids = [asteroid1, asteroid2, asteroid3]
+asteroid3 = pygame.image.load("Images/space-station.png")
+asteroid4 = pygame.image.load("Images/asteroid-3.png")
+
+asteroids = [asteroid1, asteroid2, asteroid3, asteroid4]
 
 # Coordinates for player image (x, y). Base off screen width and height
 
@@ -64,7 +66,7 @@ class Asteroid:
         self.falling = True
         self.ypos = 0
         self.xpos = random.randint(0, xmax)
-        self.num_asteroid = random.randint(0, 2)
+        self.num_asteroid = random.randint(0, 3)
         screen.blit(asteroids[self.num_asteroid], (self.xpos, self.ypos))
 
     def start_falling(self):
@@ -129,8 +131,8 @@ asteroid.fall()
 
 while running:
 
-    # RGB control for bacground. Takes tuple as argument
-    screen.fill((0, 0, 0))
+    # # RGB control for bacground. Takes tuple as argument
+    # screen.fill((0, 0, 0))
     # Set background image
     screen.blit(background, (0, 0))
 
@@ -179,3 +181,8 @@ while running:
 
 
 pygame.quit()
+
+
+##Notes
+#Asteroids need to stay within Borders and speed adjustment
+#Should we make the movement of the Astro smoother or...
