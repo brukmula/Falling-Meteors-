@@ -55,7 +55,6 @@ def player(x, y):
     # blit method takes an image and coordinates as arguments
     screen.blit(player_image, (x, y))
 
-
 class Asteroid:
     global xmax, ymax
     global screen
@@ -179,9 +178,7 @@ while running:
     count += 1
     time.sleep(0.1)
 
-
 pygame.quit()
-
 
 ##Notes
 #Asteroids need to stay within Borders and speed adjustment
