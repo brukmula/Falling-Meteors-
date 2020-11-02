@@ -33,6 +33,7 @@ pygame.display.set_icon(icon)
 player_image = pygame.image.load("Images/astronaunt2.png")
 # Background Image
 background = pygame.image.load("Images/galaxy.jpg")
+
 # Asteroid Images
 asteroid1 = pygame.image.load("Images/asteroid4.png")
 asteroid2 = pygame.image.load("Images/asteroid5.png")
@@ -54,7 +55,6 @@ def player(x, y):
     # blit means "Drawing"
     # blit method takes an image and coordinates as arguments
     screen.blit(player_image, (x, y))
-
 
 class Asteroid:
     global xmax, ymax
@@ -179,9 +179,7 @@ while running:
     count += 1
     time.sleep(0.1)
 
-
 pygame.quit()
-
 
 ##Notes
 #Asteroids need to stay within Borders and speed adjustment
