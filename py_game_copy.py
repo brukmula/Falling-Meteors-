@@ -77,10 +77,10 @@ class Asteroid:
 
     def __init__(self, image):
         self.image = image
-        self.ypos = 0
+        self.ypos = random.randint(-100, -10)
         self.xpos = random.randint(left_boundary, right_boundary)
         self.set_pos()
-        
+        self.fall_speed = 50
 
     def fall(self, y_change):
         self.ypos += y_change
@@ -89,8 +89,8 @@ class Asteroid:
     def set_pos(self):
        screen.blit(self.image, (self.xpos, self.ypos)) 
     
-    def reset(self):
-        self.ypos = 0
+    def reset(self, y_start):
+        self.ypos = y_start
     
 
 # pins
@@ -135,77 +135,80 @@ for i in range(len(asteroids)):
 # asteroid3 = Asteroid(asteroid3_image)
 # asteroid4 = Asteroid(asteroid4_image)
 
-asteroid_fall_speed = 0.5
+asteroid_fall_speed = 1.5
 player = Player()
 
-while running:
+def game_loop():
+    global running
+    while running:
 
-    # # RGB control for bacground. Takes tuple as argument
-    # screen.fill((0, 0, 0))
-    # Set background image
-    screen.blit(background, (0, 0))
+        # # RGB control for bacground. Takes tuple as argument
+        # screen.fill((0, 0, 0))
+        # Set background image
+        screen.blit(background, (0, 0))
 
-    # pygame module helps with "event handling." (AKA clicking, mouse placement, keys pressed)
-    for event in pygame.event.get():  # gets list of events
-        if event.type == pygame.QUIT:  # Pygame.quit is the same as clicking x on the window
-            running = False  # Not the best but works to easily quit loop
-        # print(event) # printing events so you can keep track
+        # pygame module helps with "event handling." (AKA clicking, mouse placement, keys pressed)
+        for event in pygame.event.get():  # gets list of events
+            if event.type == pygame.QUIT:  # Pygame.quit is the same as clicking x on the window
+                running = False  # Not the best but works to easily quit loop
+            # print(event) # printing events so you can keep track
 
-        # if keystroke is pressed check whether its right or left. Will change later when we get to it. (Find some way of configuring buttons)
-        if event.type == pygame.KEYDOWN:  # KEYDOWN detects keystoke event
-            if event.key == pygame.K_LEFT and player.xpos > left_boundary:
-                player.change_xpos(-50)
-            if event.key == pygame.K_RIGHT and player.xpos < right_boundary:
-                player.change_xpos(50)
-        # if event.type == pygame.KEYUP:  # Detects when key is released
-        #     if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+            # if keystroke is pressed check whether its right or left. Will change later when we get to it. (Find some way of configuring buttons)
+            if event.type == pygame.KEYDOWN:  # KEYDOWN detects keystoke event
+                if event.key == pygame.K_LEFT and player.xpos > left_boundary:
+                    player.change_xpos(-50)
+                if event.key == pygame.K_RIGHT and player.xpos < right_boundary:
+                    player.change_xpos(50)
+            # if event.type == pygame.KEYUP:  # Detects when key is released
+            #     if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
 
-        #         playerX_change = 0
+            #         playerX_change = 0
 
-    #player function must come after the screen fill to avoid covering up image
-    
-    player.set_pos()
-
-    # asteroid1.fall(asteroid_fall_speed)
-    # asteroid2.fall(asteroid_fall_speed)
-    # asteroid3.fall(asteroid_fall_speed)
-    # asteroid4.fall(asteroid_fall_speed)
-    for asteroid in theAsteroids:
-        asteroid.fall(asteroid_fall_speed)
-
-    if theAsteroids[0].ypos > ymax + 100:
-        theAsteroids[0].reset()
-        theAsteroids[0].xpos = random.randint(left_boundary, right_boundary)
-
-
-    if theAsteroids[1].ypos > ymax + 1000:
-        theAsteroids[1].reset()
-        theAsteroids[1].xpos = random.randint(left_boundary, right_boundary)
-
-    if theAsteroids[2].ypos > ymax + 500:
-        theAsteroids[2].reset()
-        theAsteroids[2].xpos = random.randint(left_boundary, right_boundary)
-
-
-    if theAsteroids[3].ypos > ymax + 750:
-        theAsteroids[3].reset()
-        theAsteroids[3].xpos = random.randint(left_boundary, right_boundary)
-
-    for asteroid in theAsteroids:
-        asteroid.set_pos()
+        #player function must come after the screen fill to avoid covering up image
         
-    
+        player.set_pos()
+
+        # asteroid1.fall(asteroid_fall_speed)
+        # asteroid2.fall(asteroid_fall_speed)
+        # asteroid3.fall(asteroid_fall_speed)
+        # asteroid4.fall(asteroid_fall_speed)
+        for asteroid in theAsteroids:
+            asteroid.fall(asteroid_fall_speed)
+
+        if theAsteroids[0].ypos > ymax + 100:
+            theAsteroids[0].reset(-100)
+            theAsteroids[0].xpos = random.randint(left_boundary, right_boundary)
+
+
+        if theAsteroids[1].ypos > ymax + 100:
+            theAsteroids[1].reset(-1000)
+            theAsteroids[1].xpos = random.randint(left_boundary, right_boundary)
+
+        if theAsteroids[2].ypos > ymax + 100:
+            theAsteroids[2].reset(-50)
+            theAsteroids[2].xpos = random.randint(left_boundary, right_boundary)
+
+
+        if theAsteroids[3].ypos > ymax + 100:
+            theAsteroids[3].reset(-40)
+            theAsteroids[3].xpos = random.randint(left_boundary, right_boundary)
+
+        for asteroid in theAsteroids:
+            asteroid.set_pos()
+            
+        
 
 
 
-    #increase the number after the modulo operator to decrease the asteroid spawn speed
-    
-    # displaying program is taxing so work on background stuff firs
-    # Updating the display. You can either use update or use flip method. Update only changes whatever you put in the parameter. If no argument is given update changes everything. pygame flip always changes everything (Not really necessary)
-    pygame.display.update()
-    
-    
-    
+        #increase the number after the modulo operator to decrease the asteroid spawn speed
+        
+        # displaying program is taxing so work on background stuff firs
+        # Updating the display. You can either use update or use flip method. Update only changes whatever you put in the parameter. If no argument is given update changes everything. pygame flip always changes everything (Not really necessary)
+        pygame.display.update()
+        
+
+game_loop()
+
 pygame.quit()
 
 
