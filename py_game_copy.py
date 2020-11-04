@@ -86,7 +86,7 @@ class Asteroid:
         self.image = image
         self.ypos = random.randint(-200, -100)
         self.xpos = random.randint(left_boundary, right_boundary)
-        self.fall_speed = 1
+        self.fall_speed = 5
         self.rect = self.image.get_rect(topleft = (self.xpos, self.ypos))
         
         
@@ -129,7 +129,7 @@ right_button = 15
 #     def right_callback(channel):
 #         global playerX
 #         print("Right button pressed")
-#         playerX += 50 """
+#         playerX += 50 
 
 
 # GPIO_Handler.GPIO_Setup()
@@ -157,7 +157,7 @@ def game_loop():
     clock = pygame.time.Clock()
     global running
     while running:
-        #clock.tick_busy_loop(60)
+        
         
 
         # # RGB control for bacground. Takes tuple as argument
@@ -229,7 +229,9 @@ def game_loop():
             asteroid.set_pos()
         player.set_pos()
 
-        
+        clock.tick_busy_loop(60)
+        time = pygame.time.get_ticks()
+        print("{}".format(int(time / 100)))
         pygame.display.update()
         
 
