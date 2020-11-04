@@ -25,20 +25,22 @@ pygame.display.set_caption('Falling Meteors')
 # from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
 
 # icon for game window
-icon = pygame.image.load("Images/meteorite.png")
+icon = pygame.image.load("Images/meteorite.png").convert_alpha()
 pygame.display.set_icon(icon)
 
 # Player image
 player_image = pygame.image.load("Images/astronaut.png").convert_alpha()
 # Background Image
-background = pygame.image.load("Images/galaxy.jpg")
+background = pygame.image.load("Images/galaxy.jpg").convert_alpha()
 # Asteroid Images
 asteroid1_image = pygame.image.load("Images/asteroid4.png").convert_alpha()
 asteroid2_image = pygame.image.load("Images/asteroid5.png").convert_alpha()
-asteroid3_image = pygame.image.load("Images/space-station.png")
+asteroid3_image = pygame.image.load("Images/space-station.png").convert_alpha()
 asteroid4_image = pygame.image.load("Images/asteroid-3.png").convert_alpha()
 
 asteroids = [asteroid1_image, asteroid2_image, asteroid3_image, asteroid4_image]
+
+
 
 # Coordinates for player image (x, y). Base off screen width and height
 
@@ -47,44 +49,64 @@ playerY = 480
 
 
 class Player:
-    global player_image, playerX, playerY
 
-    def __init__(self):
-        self.xpos = playerX
-        self.ypos = playerY
-        self.set_pos()
+    def __init__(self, image, x, y):
+        self.xpos = x
+        self.ypos = y
+        self.image = image
+        self.rect = self.image.get_rect(topleft = (self.xpos, self.ypos))
+        
+        
 
     # player function that takes x and y coordinates
 
     def set_pos(self):
         # blit means "Drawing"
         # blit method takes an image and coordinates as arguments
-        screen.blit(player_image, (self.xpos, self.ypos))
+        screen.blit(self.image, self.rect)
 
     def change_xpos(self, x_change):
         self.xpos += x_change
+        self.rect.x = self.xpos
+
+    def isCollided(self, obj):
+        return self.rect.colliderect(obj.rect)
+
+
+
 
 
 class Asteroid:
     global xmax, ymax
     global screen
     global asteroids
+    
 
     def __init__(self, image):
         self.image = image
-        self.ypos = random.randint(-100, -10)
+        self.ypos = random.randint(-200, -100)
         self.xpos = random.randint(left_boundary, right_boundary)
-        self.set_pos()
-        self.fall_speed = 50
+        self.fall_speed = 1
+        self.rect = self.image.get_rect(topleft = (self.xpos, self.ypos))
+        
+        
+        
 
-    def fall(self, y_change):
-        self.ypos += y_change
+    def fall(self):
+        self.ypos += self.fall_speed
+        self.rect.y = self.ypos
 
     def set_pos(self):
-        screen.blit(self.image, (self.xpos, self.ypos))
+        screen.blit(self.image, self.rect)
 
-    def reset(self, y_start):
+    def reset(self, y_start = -100):
         self.ypos = y_start
+        self.rect.y = self.ypos
+    
+    def randomize_xpos(self):
+        self.xpos = random.randint(left_boundary, right_boundary)
+        self.rect.x = self.xpos
+
 
 
 # pins
@@ -121,26 +143,29 @@ running = True
 
 startTime = time.time()
 
+
+
+
 theAsteroids = []
 for i in range(len(asteroids)):
     theAsteroids.append(Asteroid(asteroids[i]))
-# asteroid1 = Asteroid(asteroid1_image)
-# asteroid2 = Asteroid(asteroid2_image)
-# asteroid3 = Asteroid(asteroid3_image)
-# asteroid4 = Asteroid(asteroid4_image)
 
-asteroid_fall_speed = 1.5
-player = Player()
+player = Player(player_image, playerX, playerY)
 
 
 def game_loop():
+    clock = pygame.time.Clock()
     global running
     while running:
+        #clock.tick_busy_loop(60)
+        
 
         # # RGB control for bacground. Takes tuple as argument
-        # screen.fill((0, 0, 0))
+        
         # Set background image
-        screen.blit(background, (0, 0))
+        
+
+        
 
         # pygame module helps with "event handling." (AKA clicking, mouse placement, keys pressed)
         for event in pygame.event.get():  # gets list of events
@@ -161,47 +186,52 @@ def game_loop():
 
         # player function must come after the screen fill to avoid covering up image
 
-        player.set_pos()
+        
+        
+        
+        
+        for i in range(len(theAsteroids)):
+            theAsteroids[i].fall()
+            if theAsteroids[i].ypos > ymax + 100:
+                theAsteroids[i].image = random.choice(asteroids)
+                theAsteroids[i].reset(random.randint(-500, -100))
+                theAsteroids[i].randomize_xpos()
+                
+        
 
-        # asteroid1.fall(asteroid_fall_speed)
-        # asteroid2.fall(asteroid_fall_speed)
-        # asteroid3.fall(asteroid_fall_speed)
-        # asteroid4.fall(asteroid_fall_speed)
-        for asteroid in theAsteroids:
-            asteroid.fall(asteroid_fall_speed)
+        # if theAsteroids[0].ypos > ymax + 100:
+        #     theAsteroids[0].reset(-100)
+        #     theAsteroids[0].randomize_xpos()
 
-        if theAsteroids[0].ypos > ymax + 100:
-            theAsteroids[0].reset(-100)
-            theAsteroids[0].xpos = random.randint(left_boundary, right_boundary)
+        # if theAsteroids[1].ypos > ymax + 100:
+        #     theAsteroids[1].reset(-200)
+        #     theAsteroids[1].randomize_xpos()
 
-        if theAsteroids[1].ypos > ymax + 100:
-            theAsteroids[1].reset(-1000)
-            theAsteroids[1].xpos = random.randint(left_boundary, right_boundary)
+        # if theAsteroids[2].ypos > ymax + 100:
+        #     theAsteroids[2].reset(-50)
+        #     theAsteroids[2].randomize_xpos()
 
-        if theAsteroids[2].ypos > ymax + 100:
-            theAsteroids[2].reset(-50)
-            theAsteroids[2].xpos = random.randint(left_boundary, right_boundary)
+        # if theAsteroids[3].ypos > ymax + 100:
+        #     theAsteroids[3].reset(-40)
+        #     theAsteroids[3].randomize_xpos()
 
-        if theAsteroids[3].ypos > ymax + 100:
-            theAsteroids[3].reset(-40)
-            theAsteroids[3].xpos = random.randint(left_boundary, right_boundary)
-
-        for asteroid in theAsteroids:
-            asteroid.set_pos()
-
-        player_rect = player_image.get_rect(topleft=(playerX, playerY))
-        for i in range(len(asteroids)):
-            asteroidRect = asteroids[i].get_rect(
-                topleft=(theAsteroids[i].xpos, theAsteroids[i].ypos))
-            if player_rect.colliderect(asteroidRect):
-                print("collision detected")
-
+        # check for collision
+        for i in range(len(theAsteroids)):
+            if player.isCollided(theAsteroids[i]):
+                running = False
+        
         # increase the number after the modulo operator to decrease the asteroid spawn speed
 
         # displaying program is taxing so work on background stuff firs
         # Updating the display. You can either use update or use flip method. Update only changes whatever you put in the parameter. If no argument is given update changes everything. pygame flip always changes everything (Not really necessary)
-        pygame.display.update()
+        screen.blit(background, (0, 0))
+        for asteroid in theAsteroids:
+            asteroid.set_pos()
+        player.set_pos()
 
+        
+        pygame.display.update()
+        
 
 game_loop()
 
