@@ -5,17 +5,22 @@ import threading
 # import RPi.GPIO as GPIO
 # this is necessary to start up all the pygame modules:
 pygame.init()
+pygame.font.init()
 
 # setting up the display window:
 global xmax, ymax
 global screen
-xmax = 800
+xmax = 900
 ymax = 600
 left_boundary = 50
-right_boundary = 700
+right_boundary = xmax - 100
 screen = pygame.display.set_mode((xmax, ymax))
 # set_mode() takes a tuple as an argument that tells it the width and height
 # of the window (A.K.A. the resolution)
+# myfont = pygame.font.SysFont('Comic Sans MS', 30)
+
+# textsurface = myfont.render('{}'.format(time), False, (0, 0, 0))
+
 
 # Sets the title of the window
 pygame.display.set_caption('Falling Meteors')
@@ -44,8 +49,8 @@ asteroids = [asteroid1_image, asteroid2_image, asteroid3_image, asteroid4_image]
 
 # Coordinates for player image (x, y). Base off screen width and height
 
-playerX = 370
-playerY = 480
+playerX = 450
+playerY = 550
 
 
 class Player:
@@ -54,7 +59,9 @@ class Player:
         self.xpos = x
         self.ypos = y
         self.image = image
-        self.rect = self.image.get_rect(topleft = (self.xpos, self.ypos))
+        self.rect = self.image.get_rect(center = (self.xpos, self.ypos))
+        self.rect.height -= 10
+        self.rect.width -= 10
         
         
 
@@ -67,7 +74,7 @@ class Player:
 
     def change_xpos(self, x_change):
         self.xpos += x_change
-        self.rect.x = self.xpos
+        self.rect.x = self.xpos 
 
     def isCollided(self, obj):
         return self.rect.colliderect(obj.rect)
@@ -80,20 +87,25 @@ class Asteroid:
     global xmax, ymax
     global screen
     global asteroids
-    
+    global clock
+    global random_integers 
 
     def __init__(self, image):
+        
         self.image = image
-        self.ypos = random.randint(-200, -100)
-        self.xpos = random.randint(left_boundary, right_boundary)
-        self.fall_speed = 5
-        self.rect = self.image.get_rect(topleft = (self.xpos, self.ypos))
+        self.ypos = random.randint(-1000, -100)
+        self.xpos = random.randint(*(((200 * i) + 50), ((200 * (i + 1)))))
+        self.fall_speed = 0.50
+        self.rect = self.image.get_rect(center = (self.xpos, self.ypos))
+        self.rect.height -= 10
+        self.rect.width -= 10
+        
         
         
         
 
     def fall(self):
-        self.ypos += self.fall_speed
+        self.ypos += self.fall_speed 
         self.rect.y = self.ypos
 
     def set_pos(self):
@@ -103,9 +115,11 @@ class Asteroid:
         self.ypos = y_start
         self.rect.y = self.ypos
     
-    def randomize_xpos(self):
-        self.xpos = random.randint(left_boundary, right_boundary)
+    def randomize_xpos(self, increment):
+        self.xpos = random.randint(*(((200 * increment) + 50), ((200 * (increment + 1)))))
         self.rect.x = self.xpos
+        return self.xpos
+
 
 
 
@@ -139,9 +153,10 @@ right_button = 15
 
 
 # The game loop. Where all the logic of the game is. Start with a 'crashed' boolean that determines when the game loop ends.
-running = True
 
-startTime = time.time()
+
+
+
 
 
 
@@ -154,8 +169,24 @@ player = Player(player_image, playerX, playerY)
 
 
 def game_loop():
+    level_1 = False
+    level_2= False
+    level_3 = False
+    level_4 = False
+    level_5 = False
+    level_6 = False
+    level_7 = False
+    level_8 = False
+    level_9 = False
+    level_10 = False
+    
+        
+    
+    
     clock = pygame.time.Clock()
-    global running
+
+    running = True
+    startTime = pygame.time.get_ticks()
     while running:
         
         
@@ -163,10 +194,7 @@ def game_loop():
         # # RGB control for bacground. Takes tuple as argument
         
         # Set background image
-        
-
-        
-
+    
         # pygame module helps with "event handling." (AKA clicking, mouse placement, keys pressed)
         for event in pygame.event.get():  # gets list of events
             if event.type == pygame.QUIT:  # Pygame.quit is the same as clicking x on the window
@@ -181,9 +209,8 @@ def game_loop():
                     player.change_xpos(50)
             # if event.type == pygame.KEYUP:  # Detects when key is released
             #     if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-
-            #         playerX_change = 0
-
+            #         player.change_xpos(0)
+                    
         # player function must come after the screen fill to avoid covering up image
 
         
@@ -193,9 +220,11 @@ def game_loop():
         for i in range(len(theAsteroids)):
             theAsteroids[i].fall()
             if theAsteroids[i].ypos > ymax + 100:
+                theAsteroids[i].reset(random.randint(-1000, -100))
                 theAsteroids[i].image = random.choice(asteroids)
-                theAsteroids[i].reset(random.randint(-500, -100))
-                theAsteroids[i].randomize_xpos()
+                theAsteroids[i].randomize_xpos(i)
+                
+                        
                 
         
 
@@ -229,9 +258,75 @@ def game_loop():
             asteroid.set_pos()
         player.set_pos()
 
-        clock.tick_busy_loop(60)
-        time = pygame.time.get_ticks()
-        print("{}".format(int(time / 100)))
+        
+        time_since_start = pygame.time.get_ticks() - startTime
+
+
+        if not level_1:
+            if int(time_since_start / 100) == 100:
+                for asteroid in theAsteroids:
+                    asteroid.fall_speed += 0.25
+                    level_1= True
+
+        if not level_2:
+            if int(time_since_start / 100) == 200:
+                for asteroid in theAsteroids:
+                    asteroid.fall_speed += 0.25
+                    level_2= True
+
+        if not level_3:
+            if int(time_since_start / 100) == 300:
+                for asteroid in theAsteroids:
+                    asteroid.fall_speed += 0.25
+                    level_3 = True
+
+        if not level_4:
+            if int(time_since_start / 100) == 400:
+                for asteroid in theAsteroids:
+                    asteroid.fall_speed += 0.25
+                    level_4 = True
+
+        if not level_5:
+            if int(time_since_start / 100) == 500:
+                for asteroid in theAsteroids:
+                    asteroid.fall_speed += 0.25
+                    level_5 = True
+
+        if not level_6:
+            if int(time_since_start / 100) == 600:
+                for asteroid in theAsteroids:
+                    asteroid.fall_speed += 0.25
+                    level_6 = True
+
+        if not level_7:
+            if int(time_since_start / 100) == 700:
+                for asteroid in theAsteroids:
+                    asteroid.fall_speed += 0.25
+                    level_7 = True
+
+        if not level_8:
+            if int(time_since_start / 100) == 800:
+                for asteroid in theAsteroids:
+                    asteroid.fall_speed += 0.25
+                    level_8 = True
+
+        if not level_9:
+            if int(time_since_start / 100) == 900:
+                for asteroid in theAsteroids:
+                    asteroid.fall_speed += 0.25
+                    level_9 = True
+
+        if not level_10:
+            if int(time_since_start / 100) == 1000:
+                for asteroid in theAsteroids:
+                    asteroid.fall_speed += 0.25
+                    level_10 = True
+
+        
+
+
+        print(int(time_since_start / 100))
+        clock.tick_busy_loop(360)
         pygame.display.update()
         
 
