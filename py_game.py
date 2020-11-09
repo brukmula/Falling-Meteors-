@@ -56,6 +56,7 @@ def player(x, y):
     # blit method takes an image and coordinates as arguments
     screen.blit(player_image, (x, y))
 
+
 class Asteroid:
     global xmax, ymax
     global screen
@@ -125,9 +126,9 @@ count = 0
 numAsteroid = 0
 theAsteroids = []
 
-startTime = time.time()
-asteroid = Asteroid()
-asteroid.fall()
+# startTime = time.time()
+# asteroid = Asteroid()
+# asteroid.fall()
 
 while running:
 
@@ -153,13 +154,12 @@ while running:
 
         #         playerX_change = 0
 
-    #player function must come after the screen fill to avoid covering up image
+    # player function must come after the screen fill to avoid covering up image
     playerX += playerX_change
     player(playerX, playerY)
     playerX_change = 0
-    
 
-    #increase the number after the modulo operator to decrease the asteroid spawn speed
+    # increase the number after the modulo operator to decrease the asteroid spawn speed
     if not count % 5:
         theAsteroids.append(Asteroid())
         theAsteroids[numAsteroid].fall()
@@ -181,6 +181,6 @@ while running:
 
 pygame.quit()
 
-##Notes
-#Asteroids need to stay within Borders and speed adjustment
-#Should we make the movement of the Astro smoother or...
+# Notes
+# Asteroids need to stay within Borders and speed adjustment
+# Should we make the movement of the Astro smoother or...

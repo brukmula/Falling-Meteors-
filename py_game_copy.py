@@ -2,7 +2,7 @@ import pygame
 import random
 import time
 import threading
-# import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 # this is necessary to start up all the pygame modules:
 pygame.init()
 pygame.font.init()
@@ -95,7 +95,7 @@ class Asteroid:
         self.image = image
         self.ypos = random.randint(-1000, -100)
         self.xpos = random.randint(*(((200 * i) + 50), ((200 * (i + 1)))))
-        self.fall_speed = 0.50
+        self.fall_speed = 6.0
         self.rect = self.image.get_rect(center = (self.xpos, self.ypos))
         self.rect.height -= 10
         self.rect.width -= 10
@@ -128,28 +128,26 @@ left_button = 13
 right_button = 15
 
 
-# """ class GPIO_Handler:
-#     def GPIO_Setup(self):
-#         GPIO.setwarnings(False)
-#         GPIO.setmode(GPIO.BOARD)
-#         GPIO.setup(left_button, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-#         GPIO.setup(right_button, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+class GPIO_Handler:
+    def GPIO_Setup():
+        GPIO.setwarnings(False)
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setup(left_button, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setup(right_button, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-#     def left_callback(channel):
-#         global playerX
-#         print("Left button pressed")
-#         playerX -= 50
+    def left_callback(channel):
+        global player
+        player.change_xpos(-50)
 
-#     def right_callback(channel):
-#         global playerX
-#         print("Right button pressed")
-#         playerX += 50 
+    def right_callback(channel):
+        global player
+        player.change_xpos(50) 
 
 
-# GPIO_Handler.GPIO_Setup()
+GPIO_Handler.GPIO_Setup()
 
-# GPIO.add_event_detect(left_button, GPIO.RISING, callback=GPIO_Handler.left_callback, bouncetime=50)
-# GPIO.add_event_detect(right_button, GPIO.RISING, callback=GPIO_Handler.right_callback, bouncetime=50)
+GPIO.add_event_detect(left_button, GPIO.RISING, callback=GPIO_Handler.left_callback, bouncetime=50)
+GPIO.add_event_detect(right_button, GPIO.RISING, callback=GPIO_Handler.right_callback, bouncetime=50)
 
 
 # The game loop. Where all the logic of the game is. Start with a 'crashed' boolean that determines when the game loop ends.
@@ -167,6 +165,8 @@ for i in range(len(asteroids)):
 
 player = Player(player_image, playerX, playerY)
 
+level_speed_increment = 1.0
+
 
 def game_loop():
     level_1 = False
@@ -181,7 +181,7 @@ def game_loop():
     level_10 = False
     
         
-    
+    level_count = 0
     
     clock = pygame.time.Clock()
 
@@ -258,74 +258,86 @@ def game_loop():
             asteroid.set_pos()
         player.set_pos()
 
-        
+        font = pygame.font.SysFont('Consolas', 30)
         time_since_start = pygame.time.get_ticks() - startTime
+        screen.blit(font.render("Time: {:.1f}".format(time_since_start / 1000), True, (0, 0, 0)), (32, 48))
+        screen.blit(font.render("Level: {}".format(int(level_count)), True, (0, 0, 0)), (32, 70))
 
 
         if not level_1:
             if int(time_since_start / 100) == 100:
                 for asteroid in theAsteroids:
-                    asteroid.fall_speed += 0.25
+                    asteroid.fall_speed += level_speed_increment
                     level_1= True
+                    level_count += 0.25
 
         if not level_2:
             if int(time_since_start / 100) == 200:
                 for asteroid in theAsteroids:
-                    asteroid.fall_speed += 0.25
+                    asteroid.fall_speed += level_speed_increment
                     level_2= True
+                    level_count += 0.25
 
         if not level_3:
             if int(time_since_start / 100) == 300:
                 for asteroid in theAsteroids:
-                    asteroid.fall_speed += 0.25
+                    asteroid.fall_speed += level_speed_increment
                     level_3 = True
+                    level_count += 0.25
 
         if not level_4:
             if int(time_since_start / 100) == 400:
                 for asteroid in theAsteroids:
-                    asteroid.fall_speed += 0.25
+                    asteroid.fall_speed += level_speed_increment
                     level_4 = True
+                    level_count += 0.25
 
         if not level_5:
             if int(time_since_start / 100) == 500:
                 for asteroid in theAsteroids:
-                    asteroid.fall_speed += 0.25
+                    asteroid.fall_speed += level_speed_increment
                     level_5 = True
+                    level_count += 0.25
 
         if not level_6:
             if int(time_since_start / 100) == 600:
                 for asteroid in theAsteroids:
-                    asteroid.fall_speed += 0.25
+                    asteroid.fall_speed += level_speed_increment
                     level_6 = True
+                    level_count += 0.25
 
         if not level_7:
             if int(time_since_start / 100) == 700:
                 for asteroid in theAsteroids:
-                    asteroid.fall_speed += 0.25
+                    asteroid.fall_speed += level_speed_increment
                     level_7 = True
+                    level_count += 0.25
 
         if not level_8:
             if int(time_since_start / 100) == 800:
                 for asteroid in theAsteroids:
-                    asteroid.fall_speed += 0.25
+                    asteroid.fall_speed += level_speed_increment
                     level_8 = True
+                    level_count += 0.25
 
         if not level_9:
             if int(time_since_start / 100) == 900:
                 for asteroid in theAsteroids:
-                    asteroid.fall_speed += 0.25
+                    asteroid.fall_speed += level_speed_increment
                     level_9 = True
+                    level_count += 0.25
 
         if not level_10:
             if int(time_since_start / 100) == 1000:
                 for asteroid in theAsteroids:
-                    asteroid.fall_speed += 0.25
+                    asteroid.fall_speed += level_speed_increment
                     level_10 = True
+                    level_count += 0.25
 
         
 
 
-        print(int(time_since_start / 100))
+        #print(int(time_since_start / 100))
         clock.tick_busy_loop(360)
         pygame.display.update()
         
