@@ -4,6 +4,7 @@ import time
 import threading
 import RPi.GPIO as GPIO
 
+#Marcus -86
 # this is necessary to start up all the pygame modules:
 pygame.init()
 pygame.font.init()
@@ -82,7 +83,7 @@ class Player:
 
 
 
-
+#Robel
 
 class Asteroid:
     global xmax, ymax
@@ -100,11 +101,7 @@ class Asteroid:
         self.rect = self.image.get_rect(center = (self.xpos, self.ypos))
         self.rect.height -= 10
         self.rect.width -= 10
-        
-        
-        
-        
-
+   
     def fall(self):
         self.ypos += self.fall_speed 
         self.rect.y = self.ypos
@@ -120,9 +117,6 @@ class Asteroid:
         self.xpos = random.randint(*(((200 * increment) + 50), ((200 * (increment + 1)))))
         self.rect.x = self.xpos
         return self.xpos
-
-
-
 
 # pins
 left_button = 13
@@ -157,6 +151,8 @@ for i in range(len(asteroids)):
 
 player = Player(player_image, playerX, playerY)
 level_speed_increment = 1.0
+
+#Ryan
 
 def game_loop():
     level_1 = False
@@ -223,7 +219,7 @@ def game_loop():
             asteroid.set_pos()
         player.set_pos()
 
-        
+        #Bruk
 
         time_since_start = pygame.time.get_ticks() - startTime
         screen.blit(font.render("Time: {:.1f}".format(time_since_start / 1000), True, (255,255,255)), (32, 48))
