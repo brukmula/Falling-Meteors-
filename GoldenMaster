@@ -185,17 +185,14 @@ def game_loop():
     running = True
     startTime = pygame.time.get_ticks()
     while running:
-        
-        ## RGB control for bacground. Takes tuple as argument
-        # Set background image
     
         # pygame module helps with "event handling." (AKA clicking, mouse placement, keys pressed)
         for event in pygame.event.get():  # gets list of events
             if event.type == pygame.QUIT:  # Pygame.quit is the same as clicking x on the window
-                running = False  # Not the best but works to easily quit loop
+                running = False  
             
 
-            # if keystroke is pressed check whether its right or left. Will change later when we get to it. (Find some way of configuring buttons)
+            # if keystroke is pressed check whether its right or left
             if event.type == pygame.KEYDOWN:  # KEYDOWN detects keystoke event
                 if event.key == pygame.K_LEFT and player.xpos > left_boundary:
                     player.change_xpos(-50)
@@ -221,12 +218,9 @@ def game_loop():
                 pygame.display.update()
                 time.sleep(5)
                 running = False
-                
-        
-        # increase the number after the modulo operator to decrease the asteroid spawn speed
 
-        # displaying program is taxing so work on background stuff firs
-        # Updating the display. You can either use update or use flip method. Update only changes whatever you put in the parameter. If no argument is given update changes everything. pygame flip always changes everything (Not really necessary)
+        # displaying program is taxing so work on background stuff first
+        # Updating the display
         screen.blit(background, (0, 0))
         for asteroid in theAsteroids:
             asteroid.set_pos()
@@ -309,7 +303,6 @@ def game_loop():
                     level_10 = True
                     level_count += 0.25
 
-        #print(int(time_since_start / 100))
         clock.tick_busy_loop(360)
         pygame.display.update()
         
