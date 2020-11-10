@@ -85,6 +85,7 @@ class Player:
 
 #Robel
 
+##Asteroid Class for Spawning falling Asteroids at random locations
 class Asteroid:
     global xmax, ymax
     global screen
@@ -92,20 +93,29 @@ class Asteroid:
     global clock
     global random_integers 
 
+#Initializes attributes of Asteroid Class
     def __init__(self, image):
         
         self.image = image
+        
+        #Asteroid Spawn at random Locations
         self.ypos = random.randint(-1000, -100)
         self.xpos = random.randint(*(((200 * i) + 50), ((200 * (i + 1)))))
+        
+        #Speed of falling Asteroids
         self.fall_speed = 6.0
+        
+        #Creating Rectangular box around asteroids for collision detection
         self.rect = self.image.get_rect(center = (self.xpos, self.ypos))
         self.rect.height -= 10
         self.rect.width -= 10
    
+   #Speed Multiplier 
     def fall(self):
         self.ypos += self.fall_speed 
         self.rect.y = self.ypos
 
+    #Updates asteroids on the Screen
     def set_pos(self):
         screen.blit(self.image, self.rect)
 
@@ -113,16 +123,17 @@ class Asteroid:
         self.ypos = y_start
         self.rect.y = self.ypos
     
+    #Randomized spawn Location of Asteroids
     def randomize_xpos(self, increment):
         self.xpos = random.randint(*(((200 * increment) + 50), ((200 * (increment + 1)))))
         self.rect.x = self.xpos
         return self.xpos
 
-# pins
+# GPIO pin numbers
 left_button = 13
 right_button = 15
 
-
+#Raspberry PI GPIO setup and Initialization
 class GPIO_Handler:
     def GPIO_Setup():
         GPIO.setwarnings(False)
@@ -130,6 +141,7 @@ class GPIO_Handler:
         GPIO.setup(left_button, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.setup(right_button, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
+#Callback for moving character left/right @ +-50 pixels/click
     def left_callback(channel):
         global player
         player.change_xpos(-50)
@@ -140,6 +152,7 @@ class GPIO_Handler:
 
 GPIO_Handler.GPIO_Setup()
 
+#Event Detections for button controllers
 GPIO.add_event_detect(left_button, GPIO.RISING, callback=GPIO_Handler.left_callback, bouncetime=50)
 GPIO.add_event_detect(right_button, GPIO.RISING, callback=GPIO_Handler.right_callback, bouncetime=50)
 
