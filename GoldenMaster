@@ -19,17 +19,9 @@ right_boundary = xmax - 100
 screen = pygame.display.set_mode((xmax, ymax))
 # set_mode() takes a tuple as an argument that tells it the width and height
 # of the window (A.K.A. the resolution)
-# myfont = pygame.font.SysFont('Comic Sans MS', 30)
-
-# textsurface = myfont.render('{}'.format(time), False, (0, 0, 0))
-
 
 # Sets the title of the window
 pygame.display.set_caption('Falling Meteors')
-
-# attrubuting icon:
-# Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a>
-# from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
 
 # icon for game window
 icon = pygame.image.load("Images/meteorite.png").convert_alpha()
@@ -49,7 +41,7 @@ asteroids = [asteroid1_image, asteroid2_image, asteroid3_image, asteroid4_image]
 
 
 
-# Coordinates for player image (x, y). Base off screen width and height
+# Coordinates for player image (x, y). Based off screen width and height
 
 playerX = 450
 playerY = 550
@@ -58,6 +50,7 @@ playerY = 550
 class Player:
 
     def __init__(self, image, x, y):
+        # attributes
         self.xpos = x
         self.ypos = y
         self.image = image
@@ -67,7 +60,7 @@ class Player:
         
         
 
-    # player function that takes x and y coordinates
+    # class methods
 
     def set_pos(self):
         # blit means "Drawing"
@@ -75,10 +68,12 @@ class Player:
         screen.blit(self.image, self.rect)
 
     def change_xpos(self, x_change):
+        # player movement method
         self.xpos += x_change
         self.rect.x = self.xpos 
 
     def isCollided(self, obj):
+        # collision detection method
         return self.rect.colliderect(obj.rect)
 
 
